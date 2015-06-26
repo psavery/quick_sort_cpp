@@ -16,8 +16,8 @@ int main(int argc, char* argv[])
     return 1;
   }
 
-  std::vector<int> list = rng::rng::generateRandomIntVector(
-                            atoi(argv[1]), atoi(argv[2]), atoi(argv[3]));
+  std::vector<int> list = rng::generateRandomIntVector(
+                                atoi(argv[1]), atoi(argv[2]), atoi(argv[3]));
 
   // This will be used to compare to std::sort()
   std::vector<int> list2 = list;
