@@ -1,7 +1,18 @@
+/**********************************************************************
+  quick_sort.tpp - sorts a vector of type std::vector<T> using a quick-sort
+  algorithm.
+  Copyright (C) 2015 by Patrick Avery
+  This source code is released under the New BSD License, (the "License").
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+***********************************************************************/
+
 #include <algorithm>
 
 #include "quick_sort.h"
-#include <iostream>
 
 template<typename T> void quick_sort::quickSort(std::vector<T> &list,
                                                 int start, int end)
@@ -31,8 +42,26 @@ template<typename T> void quick_sort::quickSort(std::vector<T> &list,
   // it is greater than.
   std::swap(list[swapIndex], list[end]);
 
-  if (start < swapIndex - 1) quick_sort::quickSort(list, start,
-                                                   swapIndex - 1);
-  if (swapIndex + 1 < end) quick_sort::quickSort(list, swapIndex + 1, end);
+  if (start < swapIndex - 1) {
+    // If the block size is greater than 1000, parallelize it. Otherwise, don't
+    if (swapIndex - 1 - start > 1000) {
+      #pragma omp task shared(list)
+      {
+        quick_sort::quickSort(list, start, swapIndex - 1);
+      }
+    }
+    else quick_sort::quickSort(list, start, swapIndex - 1);
+  }
+  if (swapIndex + 1 < end) {
+    // If the block size is greater than 1000, parallelize it. Otherwise, don't
+    if (end - swapIndex - 1 > 1000) {
+      #pragma omp task shared(list)
+      {
+        quick_sort::quickSort(list, swapIndex + 1, end);
+      }
+    }
+    else quick_sort::quickSort(list, swapIndex + 1, end);
+  }
+  #pragma omp taskwait
 }
 

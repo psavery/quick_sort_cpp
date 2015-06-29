@@ -1,9 +1,9 @@
 PROGRAM = quickSort
 PROGSRC = main.cpp rng.cpp quick_sort.h
-CXXFLAGS = -O3 -std=c++11
+CXXFLAGS = -O3 -std=c++11 -fopenmp
 #CXX = icpc
 #CXXLIBS = -mkl
-OBJECTS = $(PROGSRC:%.cc=%.o)
+OBJECTS = $(PROGSRC:%.cpp=%.o)
 
 $(PROGRAM): $(OBJECTS)
 	$(CXX) $(CXXFLAGS) $^ -o $@
